@@ -77,10 +77,10 @@ public class PerceptronTest {
         check("-0.2", 1, 0);
         check("-0.1", 2, 0);
         
-//        assertEquals(toTest.whatIs(questions[0]), new BigDecimal(1));
-//        assertEquals(toTest.whatIs(questions[1]), new BigDecimal(1));
-//        assertEquals(toTest.whatIs(questions[2]), new BigDecimal(1));
-//        assertEquals(toTest.whatIs(questions[3]), new BigDecimal(0));
+        assertEquals(toTest.whatIs(questions[0]), new BigDecimal(1));
+        assertEquals(toTest.whatIs(questions[1]), new BigDecimal(1));
+        assertEquals(toTest.whatIs(questions[2]), new BigDecimal(1));
+        assertEquals(toTest.whatIs(questions[3]), new BigDecimal(0));
     }
 
     private List<Training<BigDecimalMutableMatrix>> initTrainingSet() {

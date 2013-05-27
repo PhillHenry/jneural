@@ -36,10 +36,10 @@ public class Perceptron<T extends BigDecimalMutableMatrix> {
 
 	public void teach(Collection<Training<T>> trainingSet) {
 		for (Training<T> lesson : trainingSet) {
-		    System.out.println("Initial weights: " + weights + ", input: " + lesson.input.transpose());
+//		    System.out.println("Initial weights: " + weights + ", input: " + lesson.input.transpose());
 			BigDecimal y = (BigDecimal) weights.dotProduct(lesson.input);
 			BigDecimal d = lesson.desired;
-			System.out.println("sum = " + y + ", desired = " + d);
+//			System.out.println("sum = " + y + ", desired = " + d);
 			BigDecimal factor = calculateFactor(d, y);
             
 			if (isBelowThreshold(y)) {
