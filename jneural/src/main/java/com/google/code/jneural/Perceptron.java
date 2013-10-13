@@ -14,8 +14,8 @@ import com.google.code.jmathematics.matrix.number.BigDecimalMutableMatrix;
  */
 public class Perceptron<T extends BigDecimalMutableMatrix> {
 	
-    private final String learningRate = "0.1";
-    private final BigDecimal threshold = new BigDecimal("0.5");
+    private final BigDecimal learningRate;
+    private final BigDecimal threshold;
 
     public static class Training<T extends BigDecimalMutableMatrix> {
 		final T input;
@@ -29,17 +29,17 @@ public class Perceptron<T extends BigDecimalMutableMatrix> {
 	
 	private T weights;
 
-	public Perceptron(T weights) {
+	public Perceptron(T weights, BigDecimal threshold, BigDecimal learningRate) {
 		super();
 		this.weights = weights;
+		this.learningRate = learningRate;
+		this.threshold = threshold;
 	}
 
 	public void teach(Collection<Training<T>> trainingSet) {
 		for (Training<T> lesson : trainingSet) {
-//		    System.out.println("Initial weights: " + weights + ", input: " + lesson.input.transpose());
 			BigDecimal y = (BigDecimal) weights.dotProduct(lesson.input);
 			BigDecimal d = lesson.desired;
-//			System.out.println("sum = " + y + ", desired = " + d);
 			BigDecimal factor = calculateFactor(d, y);
             
 			if (isBelowThreshold(y)) {
@@ -48,7 +48,6 @@ public class Perceptron<T extends BigDecimalMutableMatrix> {
 			    if (lessThan(d, threshold)) {
 			        changeWeights(lesson, factor);
 			    } else {
-			        System.out.println("not changing. d = " + d);
 			    }
 			}
 			
@@ -58,9 +57,6 @@ public class Perceptron<T extends BigDecimalMutableMatrix> {
     private void changeWeights(Training<T> lesson, BigDecimal factor) {
         T factored = (T) lesson.input.scalar(factor);
         T factoredTransposed = (T)factored.transpose();
-        
-        System.out.println("Adding: factor = " + factor + " to add = " + factoredTransposed);
-        
         weights = (T) weights.add(factoredTransposed);
     }
 	
@@ -71,7 +67,7 @@ public class Perceptron<T extends BigDecimalMutableMatrix> {
     protected BigDecimal calculateFactor(BigDecimal z, BigDecimal sum) {
         BigDecimal n = isBelowThreshold(sum) ? new BigDecimal(0) : new BigDecimal(1);
         BigDecimal diff = z.subtract(n);
-        return diff.multiply(new BigDecimal(learningRate));
+        return diff.multiply(learningRate);
     }
     
     protected boolean isBelowThreshold(BigDecimal factor) {
