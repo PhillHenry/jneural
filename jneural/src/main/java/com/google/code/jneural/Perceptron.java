@@ -38,14 +38,14 @@ public class Perceptron<T extends BigDecimalMutableMatrix> {
 
 	public void teach(Collection<Training<T>> trainingSet) {
 		for (Training<T> lesson : trainingSet) {
-			BigDecimal y = (BigDecimal) weights.dotProduct(lesson.input);
-			BigDecimal d = lesson.desired;
-			BigDecimal factor = calculateFactor(d, y);
+			BigDecimal weightsDotInput   = (BigDecimal) weights.dotProduct(lesson.input);
+			BigDecimal desired           = lesson.desired;
+			BigDecimal factor            = calculateFactor(desired, weightsDotInput);
             
-			if (isBelowThreshold(y)) {
+			if (isBelowThreshold(weightsDotInput)) {
 			    changeWeights(lesson, factor);
 			} else {
-			    if (lessThan(d, threshold)) {
+			    if (lessThan(desired, threshold)) {
 			        changeWeights(lesson, factor);
 			    } else {
 			    }
@@ -55,18 +55,18 @@ public class Perceptron<T extends BigDecimalMutableMatrix> {
 	}
 
     private void changeWeights(Training<T> lesson, BigDecimal factor) {
-        T factored = (T) lesson.input.scalar(factor);
-        T factoredTransposed = (T)factored.transpose();
-        weights = (T) weights.add(factoredTransposed);
+        T factored              = (T) lesson.input.scalar(factor);
+        T factoredTransposed    = (T)factored.transpose();
+        weights                 = (T) weights.add(factoredTransposed);
     }
 	
 	public BigDecimal whatIs(T values) {
 	    return (BigDecimal) weights.dotProduct(values);
 	}
 
-    protected BigDecimal calculateFactor(BigDecimal z, BigDecimal sum) {
-        BigDecimal n = isBelowThreshold(sum) ? new BigDecimal(0) : new BigDecimal(1);
-        BigDecimal diff = z.subtract(n);
+    protected BigDecimal calculateFactor(BigDecimal desired, BigDecimal sum) {
+        BigDecimal n    = isBelowThreshold(sum) ? new BigDecimal(0) : new BigDecimal(1);
+        BigDecimal diff = desired.subtract(n);
         return diff.multiply(learningRate);
     }
     

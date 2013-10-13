@@ -80,12 +80,12 @@ public class PerceptronTest {
     }
 
     private void train() {
-        List<Training<BigDecimalMutableMatrix>> trainingSet = initTrainingSet(1);
+        List<Training<BigDecimalMutableMatrix>> trainingSet = initNANDTrainingSet(1);
         toTest.teach(trainingSet);
     }
     
     private void train(int scaleFactor) {
-        List<Training<BigDecimalMutableMatrix>> trainingSet = initTrainingSet(scaleFactor);
+        List<Training<BigDecimalMutableMatrix>> trainingSet = initNANDTrainingSet(scaleFactor);
         toTest.teach(trainingSet);
     }
     
@@ -108,15 +108,16 @@ public class PerceptronTest {
         assertEquals(expected, actual.doubleValue(), 0.05d);
     }
 
-    private List<Training<BigDecimalMutableMatrix>> initTrainingSet(int scaleFactor) {
+    private List<Training<BigDecimalMutableMatrix>> initNANDTrainingSet(int scaleFactor) {
         List<Training<BigDecimalMutableMatrix>> trainingSet = new ArrayList<Perceptron.Training<BigDecimalMutableMatrix>>();
         
         int trueValue = 1 * scaleFactor;
+        int constant0 = trueValue;
         
-        questions[0] = init(new int[] { trueValue, 0,           0 });
-        questions[1] = init(new int[] { trueValue, 0,           trueValue });
-        questions[2] = init(new int[] { trueValue, trueValue,   0 });
-        questions[3] = init(new int[] { trueValue, trueValue,   trueValue });
+        questions[0] = init(new int[] { constant0, 0,           0 });
+        questions[1] = init(new int[] { constant0, 0,           trueValue });
+        questions[2] = init(new int[] { constant0, trueValue,   0 });
+        questions[3] = init(new int[] { constant0, trueValue,   trueValue });
         addToTraininSet(trainingSet, questions[0], trueValue);
         addToTraininSet(trainingSet, questions[1], trueValue);
         addToTraininSet(trainingSet, questions[2], trueValue);
@@ -129,9 +130,9 @@ public class PerceptronTest {
     }
 
     private void addToTraininSet(
-            Collection<Training<BigDecimalMutableMatrix>> set,
-            BigDecimalMutableMatrix values, 
-            int expected) {
+            Collection<Training<BigDecimalMutableMatrix>>   set,
+            BigDecimalMutableMatrix                         values, 
+            int                                             expected) {
         set.add(new Training<BigDecimalMutableMatrix>(values,
                 new BigDecimal(expected)));
     }
