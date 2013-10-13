@@ -112,12 +112,12 @@ public class PerceptronTest {
         List<Training<BigDecimalMutableMatrix>> trainingSet = new ArrayList<Perceptron.Training<BigDecimalMutableMatrix>>();
         
         int trueValue = 1 * scaleFactor;
-        int constant0 = trueValue;
+        int bias      = 1;
         
-        questions[0] = init(new int[] { constant0, 0,           0 });
-        questions[1] = init(new int[] { constant0, 0,           trueValue });
-        questions[2] = init(new int[] { constant0, trueValue,   0 });
-        questions[3] = init(new int[] { constant0, trueValue,   trueValue });
+        questions[0] = init(new int[] { bias, 0,           0 });
+        questions[1] = init(new int[] { bias, 0,           trueValue });
+        questions[2] = init(new int[] { bias, trueValue,   0 });
+        questions[3] = init(new int[] { bias, trueValue,   trueValue });
         addToTraininSet(trainingSet, questions[0], trueValue);
         addToTraininSet(trainingSet, questions[1], trueValue);
         addToTraininSet(trainingSet, questions[2], trueValue);
