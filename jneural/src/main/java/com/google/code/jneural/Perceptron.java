@@ -42,15 +42,9 @@ public class Perceptron<T extends BigDecimalMutableMatrix> {
 			BigDecimal desired           = lesson.desired;
 			BigDecimal factor            = calculateFactor(desired, weightsDotInput);
             
-			if (isBelowThreshold(weightsDotInput)) {
-			    changeWeights(lesson, factor);
-			} else {
-			    if (lessThan(desired, threshold)) {
-			        changeWeights(lesson, factor);
-			    } else {
-			    }
-			}
-			
+			if (isBelowThreshold(weightsDotInput) || isBelowThreshold(desired)) {
+		        changeWeights(lesson, factor);
+		    } 
 		}
 	}
 
@@ -74,10 +68,6 @@ public class Perceptron<T extends BigDecimalMutableMatrix> {
         return factor.compareTo(threshold) <= 0;
     }
     
-    protected boolean lessThan(BigDecimal x, BigDecimal y) {
-        return x.compareTo(y) < 0;
-    }
-	
     T getWeights() {
         return weights;
     }
