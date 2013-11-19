@@ -38,15 +38,19 @@ public class Perceptron<T extends BigDecimalMutableMatrix> {
 
 	public void teach(Collection<Training<T>> trainingSet) {
 		for (Training<T> lesson : trainingSet) {
-			BigDecimal weightsDotInput   = (BigDecimal) weights.dotProduct(lesson.input);
-			BigDecimal desired           = lesson.desired;
-			BigDecimal factor            = calculateFactor(desired, weightsDotInput);
-            
-			if (isBelowThreshold(weightsDotInput) || isBelowThreshold(desired)) {
+			BigDecimal   weightsDotInput = (BigDecimal) weights.dotProduct(lesson.input);
+			BigDecimal   desired         = lesson.desired;
+			boolean      activated       = shouldBeActivated(weightsDotInput, desired);
+            if (activated) {
+			    BigDecimal factor            = calculateFactor(desired, weightsDotInput);
 		        changeWeights(lesson, factor);
 		    } 
 		}
 	}
+
+    private boolean shouldBeActivated(BigDecimal weightsDotInput, BigDecimal desired) {
+        return isBelowThreshold(weightsDotInput) || isBelowThreshold(desired);
+    }
 
     private void changeWeights(Training<T> lesson, BigDecimal factor) {
         T factored              = (T) lesson.input.scalar(factor);

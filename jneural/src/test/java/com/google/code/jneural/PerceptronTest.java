@@ -27,6 +27,8 @@ import com.google.code.jneural.Perceptron.Training;
  */
 public class PerceptronTest {
 
+    private static final BigDecimal             LEARNING_RATE    = new BigDecimal("0.1");
+    private static final BigDecimal             THRESHOLD        = new BigDecimal("0.5");
     private static final int                    NUM_TO_RECOGNISE = 4;
     private static final int                    NUM_ELEMENTS     = 3;
     private Perceptron<BigDecimalMutableMatrix> toTest;
@@ -35,7 +37,7 @@ public class PerceptronTest {
 
     @Before
     public void setUp() {
-        toTest = new Perceptron(weights, new BigDecimal("0.5"),  new BigDecimal("0.1"));
+        toTest = new Perceptron<BigDecimalMutableMatrix>(weights, THRESHOLD,  LEARNING_RATE);
     }
 
     private BigDecimalMutableMatrix init0Weights() {
@@ -87,6 +89,12 @@ public class PerceptronTest {
     private void train(int scaleFactor) {
         List<Training<BigDecimalMutableMatrix>> trainingSet = initNANDTrainingSet(scaleFactor);
         toTest.teach(trainingSet);
+    }
+    
+    @Test
+    public void shouldBeBelowThreshold() {
+        assertTrue(toTest.isBelowThreshold(THRESHOLD.subtract(new BigDecimal("0.1"))));
+        assertFalse(toTest.isBelowThreshold(THRESHOLD.add(new BigDecimal("0.1"))));
     }
     
     @Test
