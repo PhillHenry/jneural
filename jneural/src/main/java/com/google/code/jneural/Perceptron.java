@@ -13,7 +13,7 @@ import com.google.code.jmathematics.matrix.number.NumberMatrix;
 /**
  * @see http://en.wikipedia.org/wiki/Perceptron
  */
-public class Perceptron<T extends Matrix<?>> {
+public class Perceptron<T extends Matrix<?, BigDecimal>> {
 	
     private final BigDecimal learningRate;
     private final BigDecimal threshold;
@@ -39,7 +39,7 @@ public class Perceptron<T extends Matrix<?>> {
 
 	public void teach(Collection<Training<BigDecimalMutableMatrix>> trainingSet) {
 		for (Training<BigDecimalMutableMatrix> lesson : trainingSet) {
-			BigDecimal   weightsDotInput = (BigDecimal) weights.dotProduct(lesson.input);
+			BigDecimal   weightsDotInput = weights.dotProduct(lesson.input);
 			BigDecimal   desired         = lesson.desired;
 			boolean      activated       = shouldBeActivated(weightsDotInput, desired);
             if (activated) {
