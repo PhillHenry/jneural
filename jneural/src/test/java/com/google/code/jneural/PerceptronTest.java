@@ -27,28 +27,23 @@ import com.google.code.jneural.Perceptron.Training;
  * 
  * @see http://en.wikipedia.org/wiki/Perceptron
  */
-public class PerceptronTest<T extends NumberMatrix<BigDecimal>> {
+public class PerceptronTest {
 
     private static final BigDecimal             LEARNING_RATE    = new BigDecimal("0.1");
     private static final BigDecimal             THRESHOLD        = new BigDecimal("0.5");
     private static final int                    NUM_TO_RECOGNISE = 4;
     private static final int                    NUM_ELEMENTS     = 3;
-    private Perceptron<T> toTest;
-    private T             weights = init0Weights();
-    T[]                   questions = (T[])new BigDecimalMutableMatrix[NUM_TO_RECOGNISE];
+    private Perceptron<NumberMatrix<BigDecimal>> toTest;
+    private NumberMatrix<BigDecimal>             weights = init0Weights();
+    NumberMatrix<BigDecimal>[]                   questions = new BigDecimalMutableMatrix[NUM_TO_RECOGNISE];
 
     @Before
     public void setUp() {
-        MutableNumberMatrix<BigDecimal> test = new BigDecimalMutableMatrix(1, 1);
-        NumberMatrix<BigDecimal> test2 = test;
-        Matrix< NumberMatrix<BigDecimal>, BigDecimal> test3 = new BigDecimalMutableMatrix(1, 1);
-        Matrix<? extends Matrix<? extends NumberMatrix<BigDecimal>, BigDecimal>, BigDecimal> test4 = new BigDecimalMutableMatrix(1, 1);
-        
-        toTest = (Perceptron<T>) new Perceptron<NumberMatrix<BigDecimal>>(weights, THRESHOLD,  LEARNING_RATE);
+        toTest = new Perceptron<NumberMatrix<BigDecimal>>(weights, THRESHOLD,  LEARNING_RATE);
     }
 
-    private T init0Weights() {
-        T weights = (T) new BigDecimalMutableMatrix(1, NUM_ELEMENTS);
+    private NumberMatrix<BigDecimal> init0Weights() {
+        NumberMatrix<BigDecimal> weights = new BigDecimalMutableMatrix(1, NUM_ELEMENTS);
         for (int i = 0; i < NUM_ELEMENTS; i++) {
             weights.set(i, 0, new BigDecimal(0));
         }
@@ -88,12 +83,12 @@ public class PerceptronTest<T extends NumberMatrix<BigDecimal>> {
     }
 
     private void train() {
-        List<Training<T>> trainingSet = initNANDTrainingSet(1);
+        List<Training<NumberMatrix<BigDecimal>>> trainingSet = initNANDTrainingSet(1);
         toTest.teach(trainingSet);
     }
     
     private void train(int scaleFactor) {
-        List<Training<T>> trainingSet = initNANDTrainingSet(scaleFactor);
+        List<Training<NumberMatrix<BigDecimal>>> trainingSet = initNANDTrainingSet(scaleFactor);
         toTest.teach(trainingSet);
     }
     
@@ -105,7 +100,7 @@ public class PerceptronTest<T extends NumberMatrix<BigDecimal>> {
     
     @Test
     public void shouldRecognize() {
-        toTest = new Perceptron(weights, new BigDecimal("0.999"),  new BigDecimal("0.01"));
+        toTest = new Perceptron<NumberMatrix<BigDecimal>>(weights, new BigDecimal("0.999"),  new BigDecimal("0.01"));
         
         int scaleFactor = 1;
         for (int i = 0 ; i < 1000 ; i++) {
@@ -122,8 +117,8 @@ public class PerceptronTest<T extends NumberMatrix<BigDecimal>> {
         assertEquals(expected, actual.doubleValue(), 0.05d);
     }
 
-    private List<Training<T>> initNANDTrainingSet(int scaleFactor) {
-        List<Training<T>> trainingSet = new ArrayList<Training<T>>();
+    private List<Training<NumberMatrix<BigDecimal>>> initNANDTrainingSet(int scaleFactor) {
+        List<Training<NumberMatrix<BigDecimal>>> trainingSet = new ArrayList<Training<NumberMatrix<BigDecimal>>>();
         
         int trueValue = 1 * scaleFactor;
         int bias      = 1;
@@ -144,15 +139,15 @@ public class PerceptronTest<T extends NumberMatrix<BigDecimal>> {
     }
 
     private void addToTraininSet(
-            Collection<Training<T>>   set,
-            T                         values, 
+            Collection<Training<NumberMatrix<BigDecimal>>>  set,
+            NumberMatrix<BigDecimal>                        values, 
             int                                             expected) {
-        set.add(new Training<T>(values,
+        set.add(new Training<NumberMatrix<BigDecimal>>(values,
                 new BigDecimal(expected)));
     }
 
-    private T init(int[] value) {
-        T input = (T) new BigDecimalMutableMatrix(3, 1);
+    private NumberMatrix<BigDecimal> init(int[] value) {
+        NumberMatrix<BigDecimal> input = new BigDecimalMutableMatrix(3, 1);
         for (int i = 0; i < value.length; i++) {
             input.set(0, i, new BigDecimal(value[i]));
         }
