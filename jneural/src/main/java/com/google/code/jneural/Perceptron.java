@@ -13,32 +13,32 @@ import com.google.code.jmathematics.matrix.number.NumberMatrix;
 /**
  * @see http://en.wikipedia.org/wiki/Perceptron
  */
-public class Perceptron<T extends Matrix<?, BigDecimal>> {
+public class Perceptron<T extends NumberMatrix<BigDecimal>> {
 	
     private final BigDecimal learningRate;
     private final BigDecimal threshold;
 
-    public static class Training<BigDecimalMutableMatrix> {
-		final BigDecimalMutableMatrix input;
+    public static class Training<T> {
+		final T input;
 		final BigDecimal desired;
-        public Training(BigDecimalMutableMatrix x, BigDecimal d) {
+        public Training(T x, BigDecimal d) {
             super();
             this.input = x;
             this.desired = d;
         }
 	}
 	
-	private BigDecimalMutableMatrix weights;
+	private T weights;
 
-	public Perceptron(BigDecimalMutableMatrix weights, BigDecimal threshold, BigDecimal learningRate) {
+	public Perceptron(T weights, BigDecimal threshold, BigDecimal learningRate) {
 		super();
-		this.weights = weights;
+		this.weights      = weights;
 		this.learningRate = learningRate;
-		this.threshold = threshold;
+		this.threshold    = threshold;
 	}
 
-	public void teach(Collection<Training<BigDecimalMutableMatrix>> trainingSet) {
-		for (Training<BigDecimalMutableMatrix> lesson : trainingSet) {
+	public void teach(Collection<Training<T>> trainingSet) {
+		for (Training<T> lesson : trainingSet) {
 			BigDecimal   weightsDotInput = weights.dotProduct(lesson.input);
 			BigDecimal   desired         = lesson.desired;
 			boolean      activated       = shouldBeActivated(weightsDotInput, desired);
@@ -53,14 +53,14 @@ public class Perceptron<T extends Matrix<?, BigDecimal>> {
         return isBelowThreshold(weightsDotInput) || isBelowThreshold(desired);
     }
 
-    private void changeWeights(Training<BigDecimalMutableMatrix> lesson, BigDecimal factor) {
-        BigDecimalMutableMatrix factored            = lesson.input.scalar(factor);
-        BigDecimalMutableMatrix factoredTransposed  = factored.transpose();
-        weights                                     =  weights.add(factoredTransposed);
+    private void changeWeights(Training<T> lesson, BigDecimal factor) {
+        T factored            = lesson.input.scalar(factor);
+        T factoredTransposed  = factored.transpose();
+        weights               =  weights.add(factoredTransposed);
     }
 	
-	public BigDecimal whatIs(BigDecimalMutableMatrix values) {
-	    return (BigDecimal) weights.dotProduct(values);
+	public BigDecimal whatIs(T values) {
+	    return weights.dotProduct(values);
 	}
 
     protected BigDecimal calculateFactor(BigDecimal desired, BigDecimal sum) {
@@ -73,7 +73,7 @@ public class Perceptron<T extends Matrix<?, BigDecimal>> {
         return factor.compareTo(threshold) <= 0;
     }
     
-    BigDecimalMutableMatrix getWeights() {
+    T getWeights() {
         return weights;
     }
 
